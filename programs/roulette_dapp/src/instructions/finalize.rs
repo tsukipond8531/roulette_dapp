@@ -16,21 +16,7 @@ pub fn _finalize_bet(ctx: Context<FinalizeBet>) -> Result<()> {
 
     let revealed_random_value = get_random_value(&ctx.accounts.randomness_account_data, &clock)?;
 
-    // Determine the outcome of the bet using the random value
-    let random_number = revealed_random_value[0] % 37;
-
-    let random_is_black = match random_number {
-        2 | 4 | 6 | 8 | 10 | 11 | 13 | 15 | 17 | 20 | 22 | 24 | 26 | 28 | 29 | 31 | 33 | 35 => true,
-        1 | 3 | 5 | 7 | 9 | 12 | 14 | 16 | 18 | 19 | 21 | 23 | 25 | 27 | 30 | 32 | 34 | 36 => false,
-        0 => false, // 0 is green
-        _ => return Err(BetError::RandomnessNotResolved.into()),
-    };
-
-    let mut bet_won = determine_bet_outcome(bet, revealed_random_value);
-
-    if !bet_won && bet.bet_number != 0 {
-        bet_won = bet.is_black == random_is_black;
-    }
+    let bet_won = determine_bet_outcome(bet, &revealed_random_value);
 
     if bet_won {
         msg!("Bet won!");
@@ -38,14 +24,7 @@ pub fn _finalize_bet(ctx: Context<FinalizeBet>) -> Result<()> {
         msg!("Bet lost!");
     }
 
-    let lamports = **ctx.accounts.bet.to_account_info().lamports.borrow();
-    **ctx.accounts.bet.to_account_info().lamports.borrow_mut() = 0;
-    **ctx
-        .accounts
-        .bet_authority
-        .to_account_info()
-        .lamports
-        .borrow_mut() += lamports;
+    transfer_funds_to_authority(&ctx.accounts.bet, &ctx.accounts.bet_authority);
 
     Ok(())
 }

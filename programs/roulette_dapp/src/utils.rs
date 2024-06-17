@@ -12,7 +12,7 @@ pub fn get_random_value(randomness_account_data: &AccountInfo, clock: &Clock) ->
         .map_err(|_| BetError::RandomnessNotResolved.into())
 }
 
-pub fn determine_bet_outcome(bet: &Bet, revealed_random_value: [u8; 32]) -> bool {
+pub fn determine_bet_outcome(bet: &Bet, revealed_random_value: &[u8; 32]) -> bool {
     let random_number = revealed_random_value[0] % 37; // Roulette numbers 0-36
     let random_is_black = match random_number {
         2 | 4 | 6 | 8 | 10 | 11 | 13 | 15 | 17 | 20 | 22 | 24 | 26 | 28 | 29 | 31 | 33 | 35 => true,
