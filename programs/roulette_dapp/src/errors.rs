@@ -6,4 +6,6 @@ pub enum BetError {
     InvalidBetNumber,
     #[msg("The caller does not have bet authority")]
     UnauthorizedSigner,
+    #[msg("Could not get random number value")]
+    RandomnessNotResolved,
 }

@@ -9,4 +9,5 @@ pub struct Bet {
     pub is_black: bool,
     pub is_even: bool,
     pub bump: u8,
+    pub randomness_account: Pubkey,
 }

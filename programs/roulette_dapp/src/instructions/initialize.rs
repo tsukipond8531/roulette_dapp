@@ -14,6 +14,7 @@ pub fn _initialize_bet(ctx: Context<InitializeBet>, bet_number:u8,is_black:bool)
     bet.bet_number = bet_number;
     bet.is_black = is_black;
     bet.is_even = bet_number % 2 == 0;
+    bet.randomness_account = Pubkey::default(); //placeholder, will be set later
 
     Ok(())
 }
