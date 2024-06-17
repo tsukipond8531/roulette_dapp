@@ -4,4 +4,6 @@ use anchor_lang::prelude::*;
 pub enum BetError {
     #[msg("Bet Number must be between 0 and 36")]
     InvalidBetNumber,
+    #[msg("The caller does not have bet authority")]
+    UnauthorizedSigner,
 }

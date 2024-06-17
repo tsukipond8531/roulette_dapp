@@ -1,7 +1,8 @@
 use anchor_lang::prelude::*;
 
-use crate::states::{Bet,BET_LEN,BET_SEED};
+use crate::states::{Bet,BET_LEN};
 use crate::errors::BetError;
+use crate::constants::BET_SEED;
 
 pub fn _initialize_bet(ctx: Context<InitializeBet>, bet_number:u8,is_black:bool) -> Result<()> {
     let bet = &mut ctx.accounts.bet;
@@ -26,8 +27,9 @@ pub struct InitializeBet<'info> {
         space = 8 + BET_LEN,
         seeds = [
             bet_authority.key().as_ref(),
-            &[is_black as u8],
             BET_SEED.as_bytes(),
+            &[bet_number],
+            &[is_black as u8],
         ],
         bump    
     )]

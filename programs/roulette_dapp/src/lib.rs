@@ -1,12 +1,14 @@
+use anchor_lang::prelude::*;
+
 pub mod constants;
 pub mod errors;
 pub mod instructions;
 pub mod states;
 
-use anchor_lang::prelude::*;
-
 pub use constants::*;
+pub use errors::*;
 pub use instructions::*;
+pub use states::*;
 
 declare_id!("9UiNkKquaH2AhXmQC7QKfrtyZoF3mHJzJcmYxvDdir3H");
 
@@ -16,5 +18,9 @@ pub mod roulette_dapp {
 
     pub fn initialize(ctx: Context<InitializeBet>, bet_number: u8, is_black: bool) -> Result<()> {
         _initialize_bet(ctx, bet_number, is_black)
+    }
+
+    pub fn finalize(ctx: Context<FinalizeBet>) -> Result<()> {
+        _finalize_bet(ctx)
     }
 }
