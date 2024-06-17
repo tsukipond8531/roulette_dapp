@@ -2,10 +2,11 @@ use anchor_lang::prelude::*;
 use switchboard_on_demand::accounts::RandomnessAccountData;
 
 use crate::errors::BetError;
-use crate::state::Bet;
+use crate::states::Bet;
 
 pub fn get_random_value(randomness_account_data: &AccountInfo, clock: &Clock) -> Result<[u8; 32]> {
-    let randomness_data = RandomnessAccountData::parse(randomness_account_data.data.borrow())?;
+    let randomness_data =
+        RandomnessAccountData::parse(randomness_account_data.data.borrow()).unwrap();
     randomness_data
         .get_value(clock)
         .map_err(|_| BetError::RandomnessNotResolved.into())

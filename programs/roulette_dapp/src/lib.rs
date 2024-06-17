@@ -4,11 +4,13 @@ pub mod constants;
 pub mod errors;
 pub mod instructions;
 pub mod states;
+pub mod utils;
 
 pub use constants::*;
 pub use errors::*;
 pub use instructions::*;
 pub use states::*;
+pub use utils::*;
 
 declare_id!("9UiNkKquaH2AhXmQC7QKfrtyZoF3mHJzJcmYxvDdir3H");
 

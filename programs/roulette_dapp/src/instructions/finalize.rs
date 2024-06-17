@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
-use switchboard_on_demand::accounts::RandomnessAccountData;
 
 use crate::constants::BET_SEED;
 use crate::states::Bet;
+use crate::utils::*;
 use crate::BetError;
 
 pub fn _finalize_bet(ctx: Context<FinalizeBet>) -> Result<()> {
@@ -14,11 +14,7 @@ pub fn _finalize_bet(ctx: Context<FinalizeBet>) -> Result<()> {
         BetError::UnauthorizedSigner,
     );
 
-    let randomness_data =
-        RandomnessAccountData::parse(ctx.accounts.randomness_account_data.data.borrow()).unwrap();
-    let revealed_random_value = randomness_data
-        .get_value(&clock)
-        .map_err(|_| BetError::RandomnessNotResolved)?;
+    let revealed_random_value = get_random_value(&ctx.accounts.randomness_account_data, &clock)?;
 
     // Determine the outcome of the bet using the random value
     let random_number = revealed_random_value[0] % 37;
@@ -30,7 +26,7 @@ pub fn _finalize_bet(ctx: Context<FinalizeBet>) -> Result<()> {
         _ => return Err(BetError::RandomnessNotResolved.into()),
     };
 
-    let mut bet_won = bet.bet_number == random_number;
+    let mut bet_won = determine_bet_outcome(bet, revealed_random_value);
 
     if !bet_won && bet.bet_number != 0 {
         bet_won = bet.is_black == random_is_black;
